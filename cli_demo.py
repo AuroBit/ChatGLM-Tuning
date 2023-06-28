@@ -8,7 +8,7 @@ import torch
 
 model = AutoModel.from_pretrained("/home/zh/ChatGLM-6B/ptuning/THUDM/chatglm-6b", trust_remote_code=True,
                                   load_in_8bit=True, device_map={"": 0})
-model = PeftModel.from_pretrained(model, "./output/chatglm_instruction/checkpoint-1200", device_map={'': 0})
+model = PeftModel.from_pretrained(model, "./output/chatglm_instruction/checkpoint-2500", device_map={'': 0})
 model = model.eval()
 
 tokenizer = AutoTokenizer.from_pretrained("/home/zh/ChatGLM-6B/ptuning/THUDM/chatglm-6b", trust_remote_code=True)
@@ -27,9 +27,12 @@ def build_prompt(history):
     return prompt
 
 
+# def add_instruction(prompt):
+#    return '模拟情侣聊天，你扮演女生来耐心地与男生完成一轮对话，一定不能暴露你是AI。\n男生：' + prompt + '\n女生：'
+# def add_instruction(prompt):
+#    return '你是男生的女朋友，耐心温柔地回复男生的问题，一定不能暴露你是AI。\n男生：' + prompt + '\n女生：'
 def add_instruction(prompt):
-    return '模拟情侣聊天，你扮演女生来耐心地与男生完成一轮对话，一定不能暴露你是AI。\n男生：' + prompt + '\n女生：'
-
+    return '你是男生的女朋友，耐心温柔地回复男生的问题，一定不能暴露你是人工智能。\n男生：' + prompt + '\n女生：'
 
 def signal_handler(signal, frame):
     global stop_stream
