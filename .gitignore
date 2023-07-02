@@ -4,7 +4,7 @@ models/llama/*
 models/llama-hf/llama-7b/*.bin
 models/pefts/*.bin
 
-data/*
+# data/*
 outputs/*
 output/*
 
