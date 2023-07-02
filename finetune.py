@@ -11,7 +11,7 @@ import datasets
 import os
 
 
-tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained("/home/zh/ChatGLM-6B/ptuning/THUDM/chatglm-6b", trust_remote_code=True)
 
 
 @dataclass
@@ -57,14 +57,15 @@ class ModifiedTrainer(Trainer):
         ).loss
 
     def save_model(self, output_dir=None, _internal_call=False):
-        from transformers.trainer import TRAINING_ARGS_NAME
+        # from transformers.trainer import TRAINING_ARGS_NAME
 
         os.makedirs(output_dir, exist_ok=True)
-        torch.save(self.args, os.path.join(output_dir, TRAINING_ARGS_NAME))
-        saved_params = {
-            k: v.to("cpu") for k, v in self.model.named_parameters() if v.requires_grad
-        }
-        torch.save(saved_params, os.path.join(output_dir, "adapter_model.bin"))
+        # torch.save(self.args, os.path.join(output_dir, TRAINING_ARGS_NAME))
+        # saved_params = {
+        #    k: v.to("cpu") for k, v in self.model.named_parameters() if v.requires_grad
+        # }
+        # torch.save(saved_params, os.path.join(output_dir, "adapter_model.bin"))
+        self.model.save_pretrained(output_dir)
 
 
 def main():
@@ -75,7 +76,7 @@ def main():
 
     # init model
     model = AutoModel.from_pretrained(
-        "THUDM/chatglm-6b", load_in_8bit=True, trust_remote_code=True, device_map="auto"
+        "/home/zh/ChatGLM-6B/ptuning/THUDM/chatglm-6b", load_in_8bit=True, trust_remote_code=True, device_map="auto"
     )
     model.gradient_checkpointing_enable()
     model.enable_input_require_grads()
