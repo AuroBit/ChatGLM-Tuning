@@ -1,7 +1,7 @@
 python finetune.py \
     --dataset_path /home/aurobit/llm/data/chatglm-tuning/chatglm_data_multi_person_set \
-    --lora_rank 8 \
-    --per_device_train_batch_size 16 \
+    --lora_rank 32 \
+    --per_device_train_batch_size 8 \
     --gradient_accumulation_steps 1 \
     --max_steps 10000 \
     --save_steps 2000 \
