@@ -20,7 +20,7 @@ def preprocess(tokenizer, config, example, max_seq_length):
 
 
 def read_jsonl(path, max_seq_length, skip_overlength=False):
-    model_name = "THUDM/chatglm-6b"
+    model_name = "/home/aurobit/llm/model/chatglm-6b"
     tokenizer = transformers.AutoTokenizer.from_pretrained(
         model_name, trust_remote_code=True)
     config = transformers.AutoConfig.from_pretrained(
@@ -37,9 +37,9 @@ def read_jsonl(path, max_seq_length, skip_overlength=False):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--jsonl_path", type=str, default="data/alpaca_data.jsonl")
-    parser.add_argument("--save_path", type=str, default="data/alpaca")
-    parser.add_argument("--max_seq_length", type=int, default=384)
+    parser.add_argument("--jsonl_path", type=str, default="/home/aurobit/llm/data/chatglm-tuning/chatglm_data_instruction_with_multi_person_set.jsonl")
+    parser.add_argument("--save_path", type=str, default="/home/aurobit/llm/data/chatglm-tuning/chatglm_data_instruction_with_multi_person_set")
+    parser.add_argument("--max_seq_length", type=int, default=2048)
     parser.add_argument("--skip_overlength", type=bool, default=False)
     args = parser.parse_args()
 
@@ -47,6 +47,7 @@ def main():
         lambda: read_jsonl(args.jsonl_path, args.max_seq_length, args.skip_overlength)
     )
     dataset.save_to_disk(args.save_path)
+    print(dataset)
 
 
 if __name__ == "__main__":
