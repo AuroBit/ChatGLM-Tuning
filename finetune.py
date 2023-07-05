@@ -74,6 +74,9 @@ def main():
         (FinetuneArguments, TrainingArguments)
     ).parse_args_into_dataclasses()
 
+    # save finetune args
+    save_finetune_args(training_args.output_dir)
+
     # init model
     model = AutoModel.from_pretrained(
         "../model/chatglm-6b", load_in_8bit=True, trust_remote_code=True, device_map="auto"
@@ -113,8 +116,6 @@ def main():
     writer.close()
     # save model
     model.save_pretrained(training_args.output_dir)
-    # save finetune args
-    save_finetune_args(training_args.output_dir)
 
 
 def save_finetune_args(path):
