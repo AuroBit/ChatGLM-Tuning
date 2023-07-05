@@ -1,13 +1,13 @@
 python finetune.py \
-    --dataset_path /home/aurobit/llm/data/chatglm-tuning/chatglm_data_multi_person_set \
-    --lora_rank 32 \
+    --dataset_path /home/aurobit/llm/data/chatglm-tuning/sens_all \
+    --lora_rank 8 \
     --per_device_train_batch_size 8 \
     --gradient_accumulation_steps 1 \
-    --max_steps 10000 \
-    --save_steps 2000 \
+    --max_steps 2000 \
+    --save_steps 500 \
     --save_total_limit 5 \
     --learning_rate 2e-6 \
     --fp16 \
     --remove_unused_columns false \
     --logging_steps 20 \
-    --output_dir /home/aurobit/llm/model/chatglm-tuning/chatglm_model_multi_person_set
+    --output_dir /home/aurobit/llm/model/chatglm-tuning/sens_all
