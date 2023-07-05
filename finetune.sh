@@ -10,4 +10,4 @@ python finetune.py \
     --fp16 \
     --remove_unused_columns false \
     --logging_steps 20 \
-    --output_dir /home/aurobit/llm/model/chatglm-tuning/sens_all
+    --output_dir /home/aurobit/llm/model/chatglm-tuning/sens-all-0705
