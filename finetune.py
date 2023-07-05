@@ -120,8 +120,12 @@ def main():
 
 def save_finetune_args(path):
     file = 'finetune.sh'
+    if not os.path.exists(path):
+        os.makedirs(path)
+        print(f"Folder '{path}' created successfully.")
+    else:
+        print(f"Folder '{path}' already exists.")
     shutil.copy(file, path)
-
 
 if __name__ == "__main__":
     main()
