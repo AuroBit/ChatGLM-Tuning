@@ -13,3 +13,7 @@ tensorboard
 # 
 datasets==2.10.1
 git+https://github.com/huggingface/peft.git  # 最新版本 >=0.3.0.dev0
+
+# for api.py
+fastapi
+uvicorn
