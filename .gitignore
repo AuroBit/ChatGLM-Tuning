@@ -8,6 +8,9 @@ data/*
 outputs/*
 output/*
 .idea/*
+wandb/*
+runs/*
+
 
 
 
