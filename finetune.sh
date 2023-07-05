@@ -1,5 +1,5 @@
 python finetune.py \
-    --dataset_path /home/aurobit/llm/data/chatglm-tuning/sens_all \
+    --dataset_path ../data/chatglm-tuning/sens_all \
     --lora_rank 16 \
     --per_device_train_batch_size 2 \
     --gradient_accumulation_steps 1 \
@@ -10,4 +10,4 @@ python finetune.py \
     --fp16 \
     --remove_unused_columns false \
     --logging_steps 20 \
-    --output_dir /home/aurobit/llm/model/chatglm-tuning/sens-all-0705
+    --output_dir ../model/chatglm-tuning/sens-all-0705

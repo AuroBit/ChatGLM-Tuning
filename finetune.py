@@ -9,9 +9,9 @@ from peft import get_peft_model, LoraConfig, TaskType
 from dataclasses import dataclass, field
 import datasets
 import os
+import shutil
 
-
-tokenizer = AutoTokenizer.from_pretrained("/home/aurobit/llm/model/chatglm-6b", trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained("../model/chatglm-6b", trust_remote_code=True)
 
 
 @dataclass
@@ -35,7 +35,7 @@ def data_collator(features: list) -> dict:
         ids = feature["input_ids"]
         seq_len = feature["seq_len"]
         labels = (
-            [-100] * (seq_len - 1) + ids[(seq_len - 1) :] + [-100] * (longest - ids_l)
+                [-100] * (seq_len - 1) + ids[(seq_len - 1):] + [-100] * (longest - ids_l)
         )
         ids = ids + [tokenizer.pad_token_id] * (longest - ids_l)
         _ids = torch.LongTensor(ids)
@@ -76,7 +76,7 @@ def main():
 
     # init model
     model = AutoModel.from_pretrained(
-        "/home/aurobit/llm/model/chatglm-6b", load_in_8bit=True, trust_remote_code=True, device_map="auto"
+        "../model/chatglm-6b", load_in_8bit=True, trust_remote_code=True, device_map="auto"
     )
     model.gradient_checkpointing_enable()
     model.enable_input_require_grads()
@@ -113,6 +113,13 @@ def main():
     writer.close()
     # save model
     model.save_pretrained(training_args.output_dir)
+    # save finetune args
+    save_finetune_args(training_args.output_dir)
+
+
+def save_finetune_args(path):
+    file = 'finetune.sh'
+    shutil.copy(file, path)
 
 
 if __name__ == "__main__":
