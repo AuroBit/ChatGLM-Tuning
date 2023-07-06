@@ -10,7 +10,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
-parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/sens_all")
+parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/sens-all-0705-0/checkpoint-2000")
 args = parser.parse_args()
 
 model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
@@ -55,6 +55,8 @@ person_set = {
     '生活经历': "1. Ann出生在一个普通的家庭，从小就对模特行业有着浓厚的兴趣。2.Ann本科毕业于北京电影学院。",
     '生活背景': "2020-2030年的现代世界，互联网高速发达。"
 }
+
+
 def add_instruction(prompt):
     if add_person_set:
         person_set_string = json.dumps(person_set, ensure_ascii=False)
