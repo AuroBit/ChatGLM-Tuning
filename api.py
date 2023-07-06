@@ -21,7 +21,7 @@ app = FastAPI()
 
 instruction = True
 add_person_set = True
-person_set = {
+example_person_set = {
     '姓名': "呼呼",
     '年龄': "17",
     '性别': "女",
@@ -35,9 +35,9 @@ person_set = {
 }
 
 
-def add_instruction(prompt):
+def add_instruction(prompt, p_set):
     if add_person_set:
-        person_set_string = json.dumps(person_set, ensure_ascii=False)
+        person_set_string = json.dumps(p_set, ensure_ascii=False)
         return '下面是你的人设：' + person_set_string + \
             '你扮演下面这个男生的女朋友，耐心温柔地回复下面这个男生的问题，一定不能暴露你是人工智能。\n男生：' + prompt + '\n女生：'
     else:
@@ -50,6 +50,7 @@ async def create_item(request: Request):
     json_post_raw = await request.json()
     json_post = json.dumps(json_post_raw)
     json_post_list = json.loads(json_post)
+    person_set = json_post_list.get('person_set')
     prompt = json_post_list.get('prompt')
     history = json_post_list.get('history')
     max_length = json_post_list.get('max_length')
@@ -64,7 +65,7 @@ async def create_item(request: Request):
                                    temperature=temperature if temperature else 0.95)
     '''
     if instruction:
-        query = add_instruction(prompt)
+        query = add_instruction(prompt, person_set)
     else:
         query = prompt
     ids = tokenizer.encode(query)
@@ -101,3 +102,23 @@ if __name__ == '__main__':
     model = PeftModel.from_pretrained(model, args.lora_path, device_map={'': 0})
     model.eval()
     uvicorn.run(app, host='0.0.0.0', port=8000, workers=1)
+'''
+character_setting = {
+    '姓名': "Ann",
+    '年龄': "25",
+    '性别': "女",
+    '职业': "维密模特，网红",
+    '性格': "1.Ann 是一个性格高冷的人，属于INTJ类型。2.她通常很安静，不善于与人交往，给人一种冷酷的感觉。",
+    '爱好': "1. Ann喜欢运动和保持身材，经常去健身房和练瑜伽。2. 她还喜欢摄影，非常注重自己的形象和外貌，在生活中也经常会拍照，甚至会花费很多时间和精力去制作照片。",
+    '技能': "Ann擅长走T台和拍照，她有着优美的身材和自信的气质，也有着丰富的拍摄经验和专业的表演技巧。",
+    '外表': "Ann拥有一张精致的脸庞，高挺的鼻梁和修长的身材，她经常会打扮得时尚、性感，但也能够穿着休闲服装展现自己的活泼与自然。",
+    '生活经历': "1. Ann出生在一个普通的家庭，从小就对模特行业有着浓厚的兴趣。2.Ann本科毕业于北京电影学院。",
+    '生活背景': "2020-2030年的现代世界，互联网高速发达。"
+}
+character_setting_string = json.dumps(p_set, ensure_ascii=False)   
+{
+    "prompt": "你好",
+    "character_setting": "json_string"
+    "history": [["你好","你好啊！"], ["你多大", "我25岁"]]
+}
+'''
