@@ -10,7 +10,8 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
-parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/sens-chat-single-all-0706-2/checkpoint-2000")
+parser.add_argument("--lora_path", type=str,
+                    default="../model/chatglm-tuning/sens-chat-single-all-0706-2/checkpoint-2000")
 args = parser.parse_args()
 
 model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
@@ -22,16 +23,6 @@ tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=Tru
 os_name = platform.system()
 clear_command = 'cls' if os_name == 'Windows' else 'clear'
 stop_stream = False
-
-
-def build_prompt(history):
-    # prompt = "欢迎使用 ChatGLM-6B 模型，输入内容即可进行对话，clear 清空对话历史，stop 终止程序"
-    prompt = ""
-    for query, response in history:
-        prompt += f"\n\n用户：{query}"
-        prompt += f"\n\nChatGLM-6B：{response}"
-    return prompt
-
 
 add_character_setting = True
 example_character_setting = {
@@ -53,22 +44,44 @@ def signal_handler(signal, frame):
     stop_stream = True
 
 
+def prompt_over_length(cache_prompt, query, character_setting):
+    max_length = 2048
+    if len(cache_prompt) + len(query) + len(global_instruction) + len(character_setting) > max_length:
+        print('prompt over length, max_length={0}'.format(max_length))
+        return True
+    return False
+
+
+global_instruction = '上面是你的人设。你作为女生，和你的男朋友聊天，耐心温柔地进行回复，一定不能暴露你是人工智能。\n'
+
+
+def finalize_prompt(prompt, character_setting):
+    return character_setting + global_instruction + prompt
+
+
+def build_prompt(prompt, history, character_setting):
+    # 生成多轮对话数据
+    cache_prompt = ""
+    round_idx = 0
+    for turn_idx, (old_query, response) in enumerate(history):
+        if prompt_over_length(cache_prompt, prompt, character_setting):
+            cache_prompt = ""
+            round_idx = 0
+        cache_prompt += "[Round {}]\n问：{}\n答：{}\n".format(round_idx, old_query, response)
+        round_idx += 1
+    # 加入当前对话
+    prompt = cache_prompt + "[Round {}]\n问：{}\n答：".format(round_idx, prompt)
+    return finalize_prompt(prompt, character_setting)
+
 instruction = True
 stream = False
-
-
-def add_instruction(prompt):
-    example_character_setting_string = json.dumps(example_character_setting, ensure_ascii=False)
-    return '下面是你的人设：' + example_character_setting_string + \
-        '你扮演下面这个男生的女朋友，耐心温柔地回复下面这个男生的问题，一定不能暴露你是人工智能。\n男生：' + prompt + '\n女生：'
-
-
 def main():
     history = []
     global stop_stream
     # print("欢迎使用 ChatGLM-6B 模型，输入内容即可进行对话，clear 清空对话历史，stop 终止程序")
     while True:
         query = input("\n用户：")
+        response = ""
         if query.strip() == "stop":
             break
         if query.strip() == "clear":
@@ -78,15 +91,15 @@ def main():
             continue
         count = 0
         if instruction:
-            query = add_instruction(query)
-        ids = tokenizer.encode(query)
+            prompt = build_prompt(query)
+        ids = tokenizer.encode(prompt)
         input_ids = torch.LongTensor([ids]).to('cuda')
 
         if stream:
             print("response：", end="")
             for outputs in model.stream_generate(input_ids=input_ids, max_length=2048):
                 response = tokenizer.decode(outputs[0])
-                response = response[len(query):]
+                response = response[len(prompt):]
                 if not response:
                     continue
                 print(response[-1], end="")
@@ -95,6 +108,8 @@ def main():
             response = tokenizer.decode(out[0])
             response = response[len(query):]
             print('response:' + response, flush=True)
+
+        history.append([query, response])
 
         if stop_stream:
             stop_stream = False

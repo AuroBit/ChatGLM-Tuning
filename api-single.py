@@ -46,9 +46,9 @@ async def create_item(request: Request):
     json_post_raw = await request.json()
     json_post = json.dumps(json_post_raw)
     json_post_list = json.loads(json_post)
-    character_setting = json_post_list.get('character_setting')
     prompt = json_post_list.get('prompt')
     history = json_post_list.get('history')
+    character_setting = history[0][0]
     max_length = json_post_list.get('max_length')
     top_p = json_post_list.get('top_p')
     temperature = json_post_list.get('temperature')
@@ -90,7 +90,7 @@ async def create_item(request: Request):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
-    parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/sens_all")
+    parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/sens-chat-single-all-0706-2/checkpoint-2000")
     args = parser.parse_args()
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)

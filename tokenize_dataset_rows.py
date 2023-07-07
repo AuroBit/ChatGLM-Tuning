@@ -39,8 +39,8 @@ def read_jsonl(path, max_seq_length, skip_overlength=False):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--jsonl_path", type=str, default="../data/chatglm-tuning/sens-chat-single-all.jsonl")
-    parser.add_argument("--save_path", type=str, default="../data/chatglm-tuning/sens-chat-single-all")
+    parser.add_argument("--jsonl_path", type=str, default="../data/chatglm-tuning/sens-chat-multiple-all.jsonl")
+    parser.add_argument("--save_path", type=str, default="../data/chatglm-tuning/sens-chat-multiple-all")
     parser.add_argument("--max_seq_length", type=int, default=2048)
     parser.add_argument("--skip_overlength", type=bool, default=False)
     args = parser.parse_args()
