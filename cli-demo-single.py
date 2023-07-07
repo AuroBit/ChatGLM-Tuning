@@ -10,7 +10,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
-parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/sens-chat-single-all-0706-2")
+parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/sens-chat-single-all-0706-2/checkpoint-1000")
 args = parser.parse_args()
 
 model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
@@ -33,17 +33,8 @@ def build_prompt(history):
     return prompt
 
 
-# def add_instruction(prompt):
-#    return '模拟情侣聊天，你扮演女生来耐心地与男生完成一轮对话，一定不能暴露你是AI。\n男生：' + prompt + '\n女生：'
-# def add_instruction(prompt):
-#    return '你是男生的女朋友，耐心温柔地回复男生的问题，一定不能暴露你是AI。\n男生：' + prompt + '\n女生：'
-# def add_instruction(prompt):
-#    return '你是男生的女朋友，耐心温柔地回复男生的问题，一定不能暴露你是人工智能。\n男生：' + prompt + '\n女生：'
-# def add_instruction(prompt):
-#    return '你扮演下面这个男生的女朋友，耐心温柔地回复下面这个男生的问题，一定不能暴露你是人工智能。\n男生：' + prompt + '\n女生：'
-
-add_person_set = True
-person_set = {
+add_character_setting = True
+example_character_setting = {
     '姓名': "Ann",
     '年龄': "25",
     '性别': "女",
@@ -57,15 +48,6 @@ person_set = {
 }
 
 
-def add_instruction(prompt):
-    if add_person_set:
-        person_set_string = json.dumps(person_set, ensure_ascii=False)
-        return '下面是你的人设：' + person_set_string + \
-            '你扮演下面这个男生的女朋友，耐心温柔地回复下面这个男生的问题，一定不能暴露你是人工智能。\n男生：' + prompt + '\n女生：'
-    else:
-        return '你扮演下面这个男生的女朋友，耐心温柔地回复下面这个男生的问题，一定不能暴露你是人工智能。\n男生：' + prompt + '\n女生：'
-
-
 def signal_handler(signal, frame):
     global stop_stream
     stop_stream = True
@@ -73,6 +55,12 @@ def signal_handler(signal, frame):
 
 instruction = True
 stream = False
+
+
+def add_instruction(prompt):
+    example_character_setting_string = json.dumps(example_character_setting, ensure_ascii=False)
+    return '下面是你的人设：' + example_character_setting_string + \
+        '你扮演下面这个男生的女朋友，耐心温柔地回复下面这个男生的问题，一定不能暴露你是人工智能。\n男生：' + prompt + '\n女生：'
 
 
 def main():
