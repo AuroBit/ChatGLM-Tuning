@@ -11,7 +11,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
 parser.add_argument("--lora_path", type=str,
-                    default="../model/chatglm-tuning/sens-chat-single-all-0706-2/checkpoint-2000")
+                    default="../model/chatglm-tuning/sens-chat-multiple-all-0708-0")
 args = parser.parse_args()
 
 model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
@@ -56,7 +56,8 @@ global_instruction = '上面是你的人设。你作为女生，和你的男朋�
 
 
 def finalize_prompt(prompt, character_setting):
-    return character_setting + global_instruction + prompt
+    character_setting_string = json.dumps(character_setting, ensure_ascii=False)
+    return character_setting_string + global_instruction + prompt
 
 
 def build_prompt(prompt, history, character_setting):
@@ -104,8 +105,11 @@ def main():
         else:
             out = model.generate(input_ids=input_ids, max_length=2048)
             response = tokenizer.decode(out[0])
-            response = response[len(query):]
+            response = response[len(prompt):]
             print('response:' + response, flush=True)
+
+            # print(prompt, end="")
+            # print(response)
 
         history.append([query, response])
 
