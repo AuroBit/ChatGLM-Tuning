@@ -78,7 +78,6 @@ stream = False
 def main():
     history = []
     global stop_stream
-    # print("欢迎使用 ChatGLM-6B 模型，输入内容即可进行对话，clear 清空对话历史，stop 终止程序")
     while True:
         query = input("\n用户：")
         response = ""
@@ -87,11 +86,10 @@ def main():
         if query.strip() == "clear":
             history = []
             os.system(clear_command)
-            # print("欢迎使用 ChatGLM-6B 模型，输入内容即可进行对话，clear 清空对话历史，stop 终止程序")
             continue
         count = 0
         if instruction:
-            prompt = build_prompt(query)
+            prompt = build_prompt(query, history, example_character_setting)
         ids = tokenizer.encode(prompt)
         input_ids = torch.LongTensor([ids]).to('cuda')
 

@@ -48,6 +48,7 @@ async def create_item(request: Request):
     json_post_list = json.loads(json_post)
     prompt = json_post_list.get('prompt')
     history = json_post_list.get('history')
+    # 约定history[0][0]是character_setting
     character_setting = history[0][0]
     max_length = json_post_list.get('max_length')
     top_p = json_post_list.get('top_p')
