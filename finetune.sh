@@ -1,8 +1,8 @@
 python finetune.py \
     --dataset_path ../data/chatglm-tuning/sens-chat-multiple-all \
     --lora_rank 16 \
-    --per_device_train_batch_size 4 \
-    --gradient_accumulation_steps 1 \
+    --per_device_train_batch_size 2 \
+    --gradient_accumulation_steps 2 \
     --max_steps 2000 \
     --save_steps 500 \
     --save_total_limit 5 \
