@@ -10,8 +10,21 @@ from dataclasses import dataclass, field
 import datasets
 import os
 import shutil
+import argparse
 
-tokenizer = AutoTokenizer.from_pretrained("../model/chatglm-6b", trust_remote_code=True)
+parser = argparse.ArgumentParser()
+parser.add_argument("--model_version", type=int, default=1, required=True)
+args = parser.parse_args()
+
+base_model_path = "../model/chatglm-6b"
+if args.model_version == 2:
+    base_model_path = "../model/chatglm2-6b"
+    print("ChatGLM2-6B")
+else:
+    print("ChatGLM-6B")
+
+
+tokenizer = AutoTokenizer.from_pretrained(base_model_path, trust_remote_code=True)
 
 
 @dataclass
@@ -78,8 +91,7 @@ def main():
     save_finetune_args(training_args.output_dir)
 
     # init model
-    model = AutoModel.from_pretrained(
-        "../model/chatglm-6b", load_in_8bit=True, trust_remote_code=True, device_map="auto"
+    model = AutoModel.from_pretrained(base_model_path, load_in_8bit=True, trust_remote_code=True, device_map="auto"
     )
     model.gradient_checkpointing_enable()
     model.enable_input_require_grads()

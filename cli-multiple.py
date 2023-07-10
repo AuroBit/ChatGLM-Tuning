@@ -108,8 +108,8 @@ def main():
             response = response[len(prompt):]
             print('response:' + response, flush=True)
 
-            # print(prompt, end="")
-            # print(response)
+        # print(prompt, end="")
+        # print(response)
 
         history.append([query, response])
 
