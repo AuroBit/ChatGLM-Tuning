@@ -105,7 +105,6 @@ async def create_item(request: Request):
     time = now.strftime("%Y-%m-%d %H:%M:%S")
     answer = {
         "response": response,
-        "history": history,
         "status": 200,
         "time": time
     }
