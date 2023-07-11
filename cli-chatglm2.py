@@ -1,20 +1,26 @@
 import os
 import platform
-import signal
-from transformers import AutoTokenizer, AutoModel
-from peft import PeftModel
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, AutoModel, BitsAndBytesConfig
+from peft import PeftModel, PeftConfig
 import torch
 import json
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
+parser.add_argument("--model_path", type=str, default="../model/chatglm2-6b")
 parser.add_argument("--lora_path", type=str,
-                    default="../model/chatglm-tuning/sens-chat-multiple-all-0708-0/checkpoint-2000")
+                    default="../model/chatglm2-tuning/sens-chat-multiple-all-0711-0/checkpoint-1000")
 args = parser.parse_args()
 
-model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
+q_config = BitsAndBytesConfig(load_in_4bit=True,
+                              bnb_4bit_quant_type='nf4',
+                              bnb_4bit_use_double_quant=True,
+                              bnb_4bit_compute_dtype=torch.float32)
+
+model = AutoModel.from_pretrained(args.model_path,
+                                  quantization_config=q_config,
+                                  trust_remote_code=True,
+                                  device_map='auto')
 model = PeftModel.from_pretrained(model, args.lora_path, device_map={'': 0})
 model = model.eval()
 
@@ -74,8 +80,11 @@ def build_prompt(prompt, history, character_setting):
     prompt = cache_prompt + "[Round {}]\n问：{}\n答：".format(round_idx, prompt)
     return finalize_prompt(prompt, character_setting)
 
+
 instruction = True
 stream = False
+
+
 def main():
     history = []
     global stop_stream
