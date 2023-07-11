@@ -9,9 +9,9 @@ import json
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
+parser.add_argument("--model_path", type=str, default="../model/chatglm2-6b")
 parser.add_argument("--lora_path", type=str,
-                    default="../model/chatglm-tuning/sens-chat-multiple-all-0708-0/checkpoint-2000")
+                    default="../model/chatglm2-tuning/sens-chat-multiple-all-0711-0/checkpoint-1000")
 args = parser.parse_args()
 
 model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})

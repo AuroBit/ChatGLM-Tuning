@@ -11,13 +11,12 @@ import datasets
 import os
 import shutil
 
-tokenizer = AutoTokenizer.from_pretrained("../model/chatglm-6b", trust_remote_code=True)
-
 
 @dataclass
 class FinetuneArguments:
-    dataset_path: str = field(default="data/alpaca")
-    model_path: str = field(default="output")
+    base_model_path: str = field(default="")
+    dataset_path: str = field(default="")
+    model_path: str = field(default="")
     lora_rank: int = field(default=8)
 
 
@@ -68,27 +67,37 @@ class ModifiedTrainer(Trainer):
         self.model.save_pretrained(output_dir)
 
 
+finetune_args, training_args = HfArgumentParser((FinetuneArguments, TrainingArguments)).parse_args_into_dataclasses()
+# 核对模型
+print('***************************************')
+print('model:' + finetune_args.base_model_path)
+print('dataset:' + finetune_args.dataset_path)
+print('output:' + training_args.output_dir)
+print('***************************************')
+
+tokenizer = AutoTokenizer.from_pretrained(finetune_args.base_model_path, trust_remote_code=True)
+
+
 def main():
     writer = SummaryWriter()
-    finetune_args, training_args = HfArgumentParser(
-        (FinetuneArguments, TrainingArguments)
-    ).parse_args_into_dataclasses()
 
     # save finetune args
     save_finetune_args(training_args.output_dir)
 
     # init model
     model = AutoModel.from_pretrained(
-        "../model/chatglm-6b", load_in_8bit=True, trust_remote_code=True, device_map="auto"
+        finetune_args.base_model_path, load_in_8bit=True, trust_remote_code=True, device_map="auto"
     )
     model.gradient_checkpointing_enable()
     model.enable_input_require_grads()
     model.is_parallelizable = True
     model.model_parallel = True
-    model.lm_head = CastOutputToFloat(model.lm_head)
+
     model.config.use_cache = (
         False  # silence the warnings. Please re-enable for inference!
     )
+
+    model.lm_head = CastOutputToFloat(model.lm_head)
 
     # setup peft
     peft_config = LoraConfig(
@@ -126,6 +135,7 @@ def save_finetune_args(path):
     else:
         print(f"Folder '{path}' already exists.")
     shutil.copy(file, path)
+
 
 if __name__ == "__main__":
     main()
