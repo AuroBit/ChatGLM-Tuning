@@ -2,10 +2,10 @@
 CUDA_VISIBLE_DEVICES=0 python finetune-chatglm2.py \
     --q_lora 1 \
     --tokenized_dataset ../data/chatglm2-tuning/sens-chat-multiple-all \
-    --lora_rank 8 \
+    --lora_rank 16 \
     --per_device_train_batch_size 2 \
     --gradient_accumulation_steps 2 \
-    --num_train_epochs 5 \
+    --num_train_epochs 10 \
     --save_steps 500 \
     --save_total_limit 5 \
     --learning_rate 1e-5 \
