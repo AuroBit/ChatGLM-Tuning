@@ -9,7 +9,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm2-6b")
 parser.add_argument("--lora_path", type=str,
-                    default="../model/chatglm2-tuning/sens-chat-multiple-all-0711-0/checkpoint-1000")
+                    default="../model/chatglm2-tuning/sens-chat-multiple-all-0711-1/checkpoint-2500")
 args = parser.parse_args()
 
 q_config = BitsAndBytesConfig(load_in_4bit=True,
@@ -117,8 +117,8 @@ def main():
             response = response[len(prompt):]
             print('response:' + response, flush=True)
 
-        # print(prompt, end="")
-        # print(response)
+        print(prompt, end="")
+        print(response)
 
         history.append([query, response])
 

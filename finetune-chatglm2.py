@@ -201,3 +201,7 @@ def save_finetune_args(path):
 
 if __name__ == "__main__":
     main()
+
+# ChatGLM2 finetune
+# https://github.com/shuxueslpi/chatGLM-6B-QLoRA
+# https://github.com/beyondguo/LLM-Tuning

@@ -1,11 +1,11 @@
 python finetune.py \
     --base_model_path ../model/chatglm-6b \
-    --dataset_path ../data/chatglm-tuning/sens-chat-multiple-all \
-    --output_dir ../model/chatglm-tuning/sens-chat-multiple-all-0711-test \
-    --lora_rank 8 \
-    --per_device_train_batch_size 4 \
-    --gradient_accumulation_steps 1 \
-    --max_steps 3000 \
+    --dataset_path ../data/chatglm-tuning/chatglm-chat-all \
+    --output_dir ../model/chatglm-tuning/chatglm-chat-all-0712-0 \
+    --lora_rank 16 \
+    --per_device_train_batch_size 2 \
+    --gradient_accumulation_steps 2 \
+    --max_steps 2000 \
     --save_steps 500 \
     --save_total_limit 5 \
     --learning_rate 2e-5 \
