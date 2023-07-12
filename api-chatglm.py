@@ -110,8 +110,8 @@ async def create_item(request: Request):
     }
     log = "[" + time + "] " + '", prompt:"' + query + '"\n response:"' + repr(response) + '"'
     print(log)
-    print('prompt:' + prompt)
-    print('response:' + response)
+    # print('prompt:' + prompt)
+    # print('response:' + response)
     torch_gc()
     return answer
 
@@ -119,7 +119,7 @@ async def create_item(request: Request):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
-    parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/sens-chat-multiple-all-0708-0/checkpoint-2000")
+    parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/chatglm-chat-all-0712-0/checkpoint-2000")
     args = parser.parse_args()
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)

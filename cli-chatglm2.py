@@ -9,7 +9,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm2-6b")
 parser.add_argument("--lora_path", type=str,
-                    default="../model/chatglm2-tuning/sens-chat-multiple-all-0711-1/checkpoint-2500")
+                    default="../model/chatglm2-tuning/chatglm2-chat-all-0712-0/checkpoint-2000")
 args = parser.parse_args()
 
 q_config = BitsAndBytesConfig(load_in_4bit=True,

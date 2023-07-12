@@ -74,8 +74,11 @@ def build_prompt(prompt, history, character_setting):
     prompt = cache_prompt + "[Round {}]\n问：{}\n答：".format(round_idx, prompt)
     return finalize_prompt(prompt, character_setting)
 
+
 instruction = True
 stream = False
+
+
 def main():
     history = []
     global stop_stream
@@ -109,8 +112,8 @@ def main():
             response = response[len(prompt):]
             print('response:' + response, flush=True)
 
-        # print(prompt, end="")
-        # print(response)
+        print(prompt, end="")
+        print(response)
 
         history.append([query, response])
 
