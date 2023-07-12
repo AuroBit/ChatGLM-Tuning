@@ -58,7 +58,7 @@ def prompt_over_length(cache_prompt, query, character_setting):
     return False
 
 
-global_instruction = '上面是你的人设。你作为女生，和你的男朋友聊天，耐心温柔地进行回复，一定不能暴露你是人工智能。\n'
+global_instruction = '\n\n上面是你的人设。你作为女生，和你的男朋友聊天，耐心温柔地进行回复。不能暴露你是机器人和人工智能。\n\n'
 
 
 def finalize_prompt(prompt, character_setting):
@@ -74,10 +74,10 @@ def build_prompt(prompt, history, character_setting):
         if prompt_over_length(cache_prompt, prompt, character_setting):
             cache_prompt = ""
             round_idx = 0
-        cache_prompt += "[Round {}]\n问：{}\n答：{}\n".format(round_idx, old_query, response)
+        cache_prompt += "[Round {}]\n\n问：{}\n\n答：{}\n\n".format(round_idx, old_query, response)
         round_idx += 1
     # 加入当前对话
-    prompt = cache_prompt + "[Round {}]\n问：{}\n答：".format(round_idx, prompt)
+    prompt = cache_prompt + "[Round {}]\n\n问：{}\n\n答：".format(round_idx, prompt)
     return finalize_prompt(prompt, character_setting)
 
 
@@ -98,6 +98,7 @@ def main():
             os.system(clear_command)
             continue
         count = 0
+        prompt = query
         if instruction:
             prompt = build_prompt(query, history, example_character_setting)
         ids = tokenizer.encode(prompt)

@@ -1,7 +1,7 @@
 # Finetune ChatGLM2-B batch_size more than 1 will error, focus on this.
 CUDA_VISIBLE_DEVICES=0 python finetune-chatglm2.py \
     --q_lora 1 \
-    --tokenized_dataset ../data/chatglm2-tuning/sens-chat-multiple-all \
+    --tokenized_dataset ../data/chatglm2-tuning/chatglm2-chat-all \
     --lora_rank 16 \
     --per_device_train_batch_size 2 \
     --gradient_accumulation_steps 2 \
@@ -12,7 +12,7 @@ CUDA_VISIBLE_DEVICES=0 python finetune-chatglm2.py \
     --fp16 \
     --remove_unused_columns false \
     --logging_steps 20 \
-    --output_dir ../model/chatglm2-tuning/sens-chat-multiple-all-0711-1 \
+    --output_dir ../model/chatglm2-tuning/chatglm2-chat-all-0712-0 \
     --report_to none
     # --output_dir weights/sentiment_comp_ie_chatglm2
 

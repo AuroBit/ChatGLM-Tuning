@@ -19,8 +19,8 @@ def preprocess(tokenizer, config, example, max_seq_length):
     return {"input_ids": input_ids, "seq_len": len(prompt_ids)}
 
 
-def read_jsonl(path, max_seq_length, skip_overlength=False):
-    model_name = "../model/chatglm-6b"
+def read_jsonl(model_path, path, max_seq_length, skip_overlength=False):
+    model_name = model_path
     tokenizer = transformers.AutoTokenizer.from_pretrained(
         model_name, trust_remote_code=True)
     config = transformers.AutoConfig.from_pretrained(
@@ -39,14 +39,15 @@ def read_jsonl(path, max_seq_length, skip_overlength=False):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--jsonl_path", type=str, default="../data/chatglm-tuning/chatglm-chat-all.jsonl")
-    parser.add_argument("--save_path", type=str, default="../data/chatglm-tuning/chatglm-chat-all")
+    parser.add_argument("--model_path", type=str, default="../model/chatglm2-6b")
+    parser.add_argument("--jsonl_path", type=str, default="../data/chatglm2-tuning/chatglm2-chat-all.jsonl")
+    parser.add_argument("--save_path", type=str, default="../data/chatglm2-tuning/chatglm2-chat-all")
     parser.add_argument("--max_seq_length", type=int, default=2048)
     parser.add_argument("--skip_overlength", type=bool, default=False)
     args = parser.parse_args()
 
     dataset = datasets.Dataset.from_generator(
-        lambda: read_jsonl(args.jsonl_path, args.max_seq_length, args.skip_overlength)
+        lambda: read_jsonl(args.model_path, args.jsonl_path, args.max_seq_length, args.skip_overlength)
     )
     dataset.save_to_disk(args.save_path)
     print(dataset)
