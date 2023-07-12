@@ -41,7 +41,8 @@ def prompt_over_length(cache_prompt, query, character_setting):
     return False
 
 
-global_instruction = '上面是你的人设。你作为女生，和你的男朋友聊天，耐心温柔地进行回复，一定不能暴露你是人工智能。\n'
+# global_instruction = '上面是你的人设。你作为女生，和你的男朋友聊天，耐心温柔地进行回复，一定不能暴露你是人工智能。\n'
+global_instruction = '\n上面是你的人设。你正在和网友聊天，按照你的人设进行回复，不能暴露你是人工智能。\n'
 
 
 def finalize_prompt(prompt, character_setting_string):
@@ -105,6 +106,7 @@ async def create_item(request: Request):
     time = now.strftime("%Y-%m-%d %H:%M:%S")
     answer = {
         "response": response,
+        "final prompt": prompt,
         "status": 200,
         "time": time
     }
@@ -119,7 +121,7 @@ async def create_item(request: Request):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
-    parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/chatglm-chat-all-0712-0/checkpoint-2000")
+    parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/chatglm-chat-all-0712-1")
     args = parser.parse_args()
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)

@@ -11,7 +11,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
 parser.add_argument("--lora_path", type=str,
-                    default="../model/chatglm-tuning/chatglm-chat-all-0712-0/checkpoint-2000")
+                    default="../model/chatglm-tuning/chatglm-chat-all-0712-1")
 args = parser.parse_args()
 
 model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
@@ -52,7 +52,8 @@ def prompt_over_length(cache_prompt, query, character_setting):
     return False
 
 
-global_instruction = '上面是你的人设。你作为女生，和你的男朋友聊天，耐心温柔地进行回复，一定不能暴露你是人工智能。\n'
+# global_instruction = '上面是你的人设。你作为女生，和你的男朋友聊天，耐心温柔地进行回复，一定不能暴露你是人工智能。\n'
+global_instruction = '\n上面是你的人设。你正在和网友聊天，按照你的人设进行回复，不能暴露你是人工智能。\n'
 
 
 def finalize_prompt(prompt, character_setting):
