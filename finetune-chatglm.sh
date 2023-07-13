@@ -2,9 +2,9 @@ python finetune-chatglm.py \
     --base_model_path ../model/chatglm-6b \
     --dataset_path ../data/chatglm-tuning/chatglm-chat-all \
     --output_dir ../model/chatglm-tuning/chatglm-chat-all-0713-0 \
-    --lora_rank 16 \
+    --lora_rank 8 \
     --per_device_train_batch_size 2 \
-    --gradient_accumulation_steps 1 \
+    --gradient_accumulation_steps 2 \
     --max_steps 2000 \
     --save_steps 500 \
     --save_total_limit 5 \
