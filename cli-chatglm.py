@@ -10,11 +10,16 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
-parser.add_argument("--lora_path", type=str,
-                    default="../model/chatglm-tuning/chatglm-chat-all-0713-1/checkpoint-1000")
+parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/chatglm-chat-all-0713-1/checkpoint-1000")
+parser.add_argument("--load_in_8bit", type=bool, default=True)
 args = parser.parse_args()
 
-model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
+# model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
+if args.load_in_8bit:
+    model = AutoModel.from_pretrained(args.model_path, load_in_8bit=True, trust_remote_code=True,device_map="auto")
+else:
+    model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, device_map="auto")
+
 model = PeftModel.from_pretrained(model, args.lora_path, device_map={'': 0})
 model = model.eval()
 
