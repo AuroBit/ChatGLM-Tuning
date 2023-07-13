@@ -11,7 +11,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
 parser.add_argument("--lora_path", type=str,
-                    default="../model/chatglm-tuning/chatglm-chat-all-0712-1/checkpoint-1000")
+                    default="../model/chatglm-tuning/chatglm-chat-all-0713-0/checkpoint-1500")
 args = parser.parse_args()
 
 model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
@@ -124,6 +124,7 @@ def main():
         else:
             count += 1
             if count % 10 == 0:
+                print("当前轮次count：{0}" + count)
                 history = []
                 os.system(clear_command)
 
