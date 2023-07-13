@@ -1,7 +1,7 @@
 python finetune-chatglm.py \
     --base_model_path ../model/chatglm-6b \
     --dataset_path ../data/chatglm-tuning/chatglm-chat-all \
-    --output_dir ../model/chatglm-tuning/chatglm-chat-all-0713-2 \
+    --output_dir ../model/chatglm-tuning/chatglm-chat-all-0713-3 \
     --lora_rank 32 \
     --per_device_train_batch_size 2 \
     --gradient_accumulation_steps 2 \
@@ -12,4 +12,5 @@ python finetune-chatglm.py \
     --learning_rate 5e-5 \
     --fp16 \
     --remove_unused_columns false \
-    --logging_steps 20
+    --logging_steps 20 \
+    --load_in_8bit False

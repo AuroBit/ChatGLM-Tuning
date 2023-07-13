@@ -18,6 +18,8 @@ class FinetuneArguments:
     dataset_path: str = field(default="")
     model_path: str = field(default="")
     lora_rank: int = field(default=8)
+    load_in_8bit: bool = field(default=True)
+
 
 
 class CastOutputToFloat(nn.Sequential):
@@ -85,9 +87,11 @@ def main():
     save_finetune_args(training_args.output_dir)
 
     # init model
-    model = AutoModel.from_pretrained(
-        finetune_args.base_model_path, load_in_8bit=True, trust_remote_code=True, device_map="auto"
-    )
+    if finetune_args.load_in_8bit:
+        model = AutoModel.from_pretrained(finetune_args.base_model_path, load_in_8bit=True, trust_remote_code=True, device_map="auto")
+    else:
+        model = AutoModel.from_pretrained(finetune_args.base_model_path, trust_remote_code=True, device_map="auto")
+
     model.gradient_checkpointing_enable()
     model.enable_input_require_grads()
     model.is_parallelizable = True

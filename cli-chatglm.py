@@ -11,7 +11,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
 parser.add_argument("--lora_path", type=str,
-                    default="../model/chatglm-tuning/chatglm-chat-all-0713-1/checkpoint-2000")
+                    default="../model/chatglm-tuning/chatglm-chat-all-0713-1/checkpoint-1000")
 args = parser.parse_args()
 
 model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
@@ -82,7 +82,7 @@ stream = False
 
 def main():
     history = []
-    global stop_stream
+    count = 0
     while True:
         query = input("\n用户：")
         response = ""
@@ -92,7 +92,6 @@ def main():
             history = []
             os.system(clear_command)
             continue
-        count = 0
         prompt = query
         if instruction:
             prompt = build_prompt(query, history, example_character_setting)
@@ -113,20 +112,17 @@ def main():
             response = response[len(prompt):]
             print('response:' + response, flush=True)
 
-        print(prompt, end="")
-        print(response)
+        # print(prompt, end="")
+        # print(response)
 
         history.append([query, response])
 
-        if stop_stream:
-            stop_stream = False
-            break
-        else:
-            count += 1
-            if count % 10 == 0:
-                print("当前轮次count：{0}" + count)
-                history = []
-                os.system(clear_command)
+        count += 1
+        if count % 8 == 0:
+            print('超过8轮，清空！')
+            count = 0
+            history = []
+            # os.system(clear_command)
 
 
 if __name__ == "__main__":
