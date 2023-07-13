@@ -190,7 +190,7 @@ def main():
 
 
 def save_finetune_args(path):
-    file = 'finetune.sh'
+    file = 'finetune-chatglm.sh'
     if not os.path.exists(path):
         os.makedirs(path)
         print(f"Folder '{path}' created successfully.")

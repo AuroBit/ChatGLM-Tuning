@@ -56,7 +56,7 @@ python tokenize_dataset_rows.py \
 ### 训练
 
 ```bash
-python finetune.py \
+python finetune-chatglm.py \
     --dataset_path data/alpaca \
     --lora_rank 8 \
     --per_device_train_batch_size 6 \
