@@ -3,7 +3,7 @@ python finetune-chatglm.py \
     --dataset_path ../data/chatglm-tuning/chatglm-chat-all \
     --output_dir ../model/chatglm-tuning/chatglm-chat-all-0713-2 \
     --lora_rank 32 \
-    --per_device_train_batch_size 4 \
+    --per_device_train_batch_size 2 \
     --gradient_accumulation_steps 2 \
     --num_train_epochs 10 \
     --save_strategy "steps" \
