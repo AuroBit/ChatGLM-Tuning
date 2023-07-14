@@ -10,7 +10,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
-parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/chatglm-chat-all-0713-4/checkpoint-1500")
+parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/chatglm-chat-all-0713-4/checkpoint-2000")
 parser.add_argument("--load_in_8bit", type=bool, default=False)
 args = parser.parse_args()
 for arg in vars(args):
@@ -91,13 +91,14 @@ def main():
     history = []
     count = 0
     while True:
-        print(f"[Round {count}]")
+        print(f"\n[Round {count}]")
 
         query = input("用户：")
         response = ""
         if query.strip() == "stop":
             break
         if query.strip() == "clear":
+            count = 0
             history = []
             os.system(clear_command)
             continue
