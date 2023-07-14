@@ -93,7 +93,7 @@ def main():
     while True:
         print(f"[Round {count}]")
 
-        query = input("\n用户：")
+        query = input("用户：")
         response = ""
         if query.strip() == "stop":
             break
