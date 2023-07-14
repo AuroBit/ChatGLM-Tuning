@@ -16,9 +16,9 @@ args = parser.parse_args()
 
 # model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
 if args.load_in_8bit:
-    model = AutoModel.from_pretrained(args.model_path, load_in_8bit=True, trust_remote_code=True,device_map="auto")
+    model = AutoModel.from_pretrained(args.model_path, load_in_8bit=True, trust_remote_code=True, device_map="auto")
 else:
-    model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, device_map="auto").half()
+    model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, device_map="auto")
 
 model = PeftModel.from_pretrained(model, args.lora_path, device_map={'': 0})
 model = model.eval()
