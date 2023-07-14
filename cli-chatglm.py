@@ -10,7 +10,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
-parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/chatglm-chat-all-0713-4/checkpoint-1000")
+parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/chatglm-chat-all-0713-4/checkpoint-1500")
 parser.add_argument("--load_in_8bit", type=bool, default=False)
 args = parser.parse_args()
 for arg in vars(args):
