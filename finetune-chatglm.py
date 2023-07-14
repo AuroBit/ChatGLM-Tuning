@@ -90,7 +90,7 @@ def main():
     if finetune_args.load_in_8bit:
         model = AutoModel.from_pretrained(finetune_args.base_model_path, load_in_8bit=True, trust_remote_code=True, device_map="auto")
     else:
-        model = AutoModel.from_pretrained(finetune_args.base_model_path, trust_remote_code=True, device_map="auto").half()
+        model = AutoModel.from_pretrained(finetune_args.base_model_path, trust_remote_code=True, device_map="auto")
 
     model.gradient_checkpointing_enable()
     model.enable_input_require_grads()
