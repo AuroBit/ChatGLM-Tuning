@@ -13,6 +13,8 @@ parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
 parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/chatglm-chat-all-0713-3/checkpoint-1000")
 parser.add_argument("--load_in_8bit", type=bool, default=False)
 args = parser.parse_args()
+for arg in vars(args):
+    print(f"{arg}: {getattr(args, arg)}")
 
 # model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
 if args.load_in_8bit:
