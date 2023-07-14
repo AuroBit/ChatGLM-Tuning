@@ -126,9 +126,9 @@ def main():
 
         count += 1
         if count % 8 == 0:
-            print('超过8轮，清空！')
+            print(f"[Round {count}]")
             count = 0
-            history = []
+            # history = []
             # os.system(clear_command)
 
 
