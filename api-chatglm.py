@@ -5,6 +5,15 @@ import torch
 from peft import PeftModel
 import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
+parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/chatglm-chat-all-0712-1")
+parser.add_argument("--load_in_8bit", type=bool, default=False)
+parser.add_argument("--temperature", type=float, default=0.99)
+args = parser.parse_args()
+for arg in vars(args):
+    print(f"{arg}: {getattr(args, arg)}")
+
 DEVICE = "cuda"
 DEVICE_ID = "0"
 CUDA_DEVICE = f"{DEVICE}:{DEVICE_ID}" if DEVICE_ID else DEVICE
@@ -95,10 +104,7 @@ async def create_item(request: Request):
         prompt = query
     ids = tokenizer.encode(prompt)
     input_ids = torch.LongTensor([ids]).to('cuda')
-    out = model.generate(
-        input_ids=input_ids,
-        max_length=2048
-    )
+    out = model.generate(input_ids=input_ids, max_length=2048, temperature=args.temperature)
     response = tokenizer.decode(out[0])
     response = response[len(prompt):]
 
@@ -119,13 +125,12 @@ async def create_item(request: Request):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--model_path", type=str, default="../model/chatglm-6b")
-    parser.add_argument("--lora_path", type=str, default="../model/chatglm-tuning/chatglm-chat-all-0712-1")
-    args = parser.parse_args()
-
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)
-    model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
+    # model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, load_in_8bit=True, device_map={"": 0})
+    if args.load_in_8bit:
+        model = AutoModel.from_pretrained(args.model_path, load_in_8bit=True, trust_remote_code=True, device_map="auto")
+    else:
+        model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, device_map="auto").half()  # 训练时使用了fp16
     model = PeftModel.from_pretrained(model, args.lora_path, device_map={'': 0})
     model.eval()
     uvicorn.run(app, host='0.0.0.0', port=8000, workers=1)
